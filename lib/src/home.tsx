@@ -10,8 +10,8 @@ import AppLoading from 'expo-app-loading';
 import { Formik } from 'formik';
 import { formValidationSchema } from '../validation_schema';
 import {Shadow} from 'react-native-shadow-2';
-import Tooltip from 'react-native-walkthrough-tooltip';
 import { getRequest } from '../requests';
+import CustomModal from '../modal';
 
 interface formdata {
   owner: string;
@@ -22,6 +22,8 @@ interface formdata {
 export default function Home() {
   const [inputborderColor, setInputBorderColors] = React.useState<Array<string>>(["transparent", "transparent"]);
   const [inputShadowColor, setInputShadowColors] = React.useState<Array<string>>(["transparent", "transparent"]);
+
+  const [errorModalVisible, setErrorModalVisible] = React.useState<boolean>(false);
 
   const [inputValues, setInputValue] = React.useState<formdata>({
     owner: "",
@@ -36,7 +38,10 @@ export default function Home() {
   const formSubmit = (values:formdata) => {
     getRequest(`search/issues`,`repo:${values.owner}/${values.reponame}/node+type:issue+state:closed`).then(res=>{
       console.log(res);
-    }).catch(err=> console.log('##############',err));
+    }).catch(err=> {
+      console.log('##############',err);
+      setErrorModalVisible(true);
+    });
   }
 
   return (
@@ -65,6 +70,8 @@ export default function Home() {
 
 
           <View style={styles.inputWrap}>
+            <CustomModal visible={errorModalVisible} onclose={()=>setErrorModalVisible(false)}/>
+
             <Formik
               validationSchema={formValidationSchema}
               initialValues={{ owner: '', reponame: '' }}
@@ -150,7 +157,7 @@ export default function Home() {
 
               <View style={[styles.buttonWrap, {marginTop: errors.reponame ? 15 : 47}]}>
                 <TouchableHighlight
-                  onPress={handleSubmit}
+                  onPress={()=>handleSubmit()}
                   underlayColor="#652EA6"
                   style={styles.button}>
                   <Text

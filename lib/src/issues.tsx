@@ -10,8 +10,6 @@ import AppLoading from 'expo-app-loading';
 import { Formik } from 'formik';
 import { formValidationSchema } from '../validation_schema';
 import {Shadow} from 'react-native-shadow-2';
-import Tooltip from 'react-native-walkthrough-tooltip';
-
 
 export default function Issues() {
   const [inputborderColor, setInputBorderColors] = React.useState(["transparent", "transparent"]);
