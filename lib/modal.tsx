@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native';
 
-interface Props {
+export interface Props {
     visible: boolean;
     onclose: () => void;
 }
