@@ -7,10 +7,14 @@ import AppLoading from 'expo-app-loading';
 
 import Home from './lib/src/home';
 import Issues from './lib/src/issues';
+import { Provider } from 'react-redux';
+import store from './lib/src/store';
 
 
 export default function App() {
   return (
-    <Home/>
+    <Provider store={store}>
+      <Home/>
+    </Provider>
   );
 }

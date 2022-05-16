@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-export const formValidationSchema = yup.object().shape({
+export const formValidationSchema:object = yup.object().shape({
     owner: yup
       .string()
       .required('Owner is Required'),

@@ -2,16 +2,17 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 import { ImageBackground, StyleSheet, Text, TextInput, View, Image, TouchableHighlight } from 'react-native';
-
 import Ionicons from '@expo/vector-icons/Ionicons';
-
 import AppLoading from 'expo-app-loading';
+import { useSelector, useDispatch } from 'react-redux';
+import { setOpenedIssues, setClosedIssues, resetState } from './store/slices';
 
 import { Formik } from 'formik';
 import { formValidationSchema } from '../validation_schema';
 import {Shadow} from 'react-native-shadow-2';
 import { getRequest } from '../requests';
 import CustomModal from '../modal';
+import { useAppSelector } from '../hooks';
 
 interface formdata {
   owner: string;
@@ -35,9 +36,15 @@ export default function Home() {
     reponame: ""
   });
 
+  const openedIssues = useAppSelector(state => state.openedIssues);
+  const closedIssues = useAppSelector(state => state.closedIssues);
+
+  const dispatch = useDispatch();
+
   const formSubmit = (values:formdata) => {
     getRequest(`search/issues`,`repo:${values.owner}/${values.reponame}/node+type:issue+state:closed`).then(res=>{
-      console.log(res);
+      dispatch(setClosedIssues(res.data));
+      console.log(res.data['total_count']);
     }).catch(err=> {
       console.log('##############',err);
       setErrorModalVisible(true);
@@ -71,6 +78,7 @@ export default function Home() {
 
           <View style={styles.inputWrap}>
             <CustomModal visible={errorModalVisible} onclose={()=>setErrorModalVisible(false)}/>
+            <Text style={{color:'#FFF'}}>{closedIssues.total_count}</Text>
 
             <Formik
               validationSchema={formValidationSchema}
