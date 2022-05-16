@@ -2,33 +2,24 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 import { ImageBackground, StyleSheet, Text, TextInput, View, Image, TouchableHighlight } from 'react-native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import AppLoading from 'expo-app-loading';
 
 import { Formik } from 'formik';
-import { formValidationSchema } from '../validation_schema';
+import { formValidationSchema } from '../../helper/validation_schema';
 import {Shadow} from 'react-native-shadow-2';
 
-export default function Issues() {
+const Tab = createBottomTabNavigator();
+
+export default function OpenIssues() {
 
   return (
     <>
       <View style={styles.container}>
-        <View style={styles.contents}>
-          <View style={styles.logoWrap}>
-            <View style={styles.logo}>
-              <Image source={require('./../../assets/logo.png')}></Image>
-            </View>
-          </View>
-
-
-          <View style={styles.inputWrap}>
-            
-          </View>
-        </View>
-          
+        <Text>Open issues</Text>
       </View>
     </>
   );
@@ -55,12 +46,24 @@ const styles = StyleSheet.create({
   logo: {
     width: '50%',
   },
-  inputWrap: {
+  issueCountWrap: {
     flex: 1,
-    marginTop: 68,
+    marginTop: 34,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start'
+  },
+  heading: {
+    fontSize: 20,
+    color: '#fff',
+  },
+  badge: {
+    fontSize: 14,
+    borderRadius: 20,
+    padding: 2,
+    marginTop: 3,
+    marginLeft:5,
+    backgroundColor: 'rgba(230,231,233,0.5)',
   },
   textWrap: {
     width: '100%',

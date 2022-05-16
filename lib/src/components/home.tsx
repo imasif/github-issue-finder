@@ -5,14 +5,14 @@ import { ImageBackground, StyleSheet, Text, TextInput, View, Image, TouchableHig
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AppLoading from 'expo-app-loading';
 import { useSelector, useDispatch } from 'react-redux';
-import { setOpenedIssues, setClosedIssues, resetState } from './store/slices';
+import { setOpenedIssues, setClosedIssues, resetState } from '../store/slices';
 
 import { Formik } from 'formik';
-import { formValidationSchema } from '../validation_schema';
+import { formValidationSchema } from '../helper/validation_schema';
 import {Shadow} from 'react-native-shadow-2';
-import { getRequest } from '../requests';
-import CustomModal from '../modal';
-import { useAppSelector } from '../hooks';
+import { getRequest } from '../helper/requests';
+import CustomModal from '../helper/modal';
+import { useAppSelector } from '../helper/hooks';
 
 interface formdata {
   owner: string;
@@ -55,7 +55,7 @@ export default function Home() {
     <>
       <View style={styles.container}>
         <ImageBackground
-            source={require('../../assets/gradient_bg.png')}
+            source={require('../../../assets/gradient_bg.png')}
             style={{
               width: '100%',
               height: 654,
@@ -71,7 +71,7 @@ export default function Home() {
         <View style={styles.contents}>
           <View style={styles.logoWrap}>
             <View style={styles.logo}>
-              <Image source={require('./../../assets/logo.png')}></Image>
+              <Image source={require('../../../assets/logo.png')}></Image>
             </View>
           </View>
 
@@ -114,7 +114,7 @@ export default function Home() {
                         <Text></Text>
                         <View style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
                           <View>
-                            <Image source={require('./../../assets/error_top.png')} style={{ width: 10, height: 9, opacity:0.28 }} />
+                            <Image source={require('../../../assets/error_top.png')} style={{ width: 10, height: 9, opacity:0.28 }} />
                           </View>
                           <View style={{backgroundColor: 'rgba(255,0,0, 0.28)', padding: 3, borderRadius: 4, borderColor:'rgba(255,0,0, 0.28)', borderWidth:1}}>
                             <Text style={{ fontSize: 12, color: 'red', textAlign: 'right' }}>{errors.owner}</Text>
@@ -153,7 +153,7 @@ export default function Home() {
                         <Text></Text>
                         <View style={{ flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center' }}>
                           <View>
-                            <Image source={require('./../../assets/error_top.png')} style={{ width: 10, height: 9, opacity:0.28 }} />
+                            <Image source={require('../../../assets/error_top.png')} style={{ width: 10, height: 9, opacity:0.28 }} />
                           </View>
                           <View style={{backgroundColor: 'rgba(255,0,0, 0.28)', padding: 3, borderRadius: 4, borderColor:'rgba(255,0,0, 0.28)', borderWidth:1}}>
                             <Text style={{ fontSize: 12, color: 'red', textAlign: 'right' }}>{errors.reponame}</Text>
