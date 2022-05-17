@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 import { ImageBackground, StyleSheet, Text, TextInput, View, Image, TouchableHighlight } from 'react-native';
@@ -19,7 +19,7 @@ export default function OpenIssues() {
   return (
     <>
       <View style={styles.container}>
-        <Text>Open issues</Text>
+        <Text style={{color:'#fff'}}>Open issues</Text>
       </View>
     </>
   );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 import { ImageBackground, StyleSheet, Text, TextInput, View, Image, TouchableHighlight } from 'react-native';
@@ -16,10 +16,11 @@ const Tab = createBottomTabNavigator();
 
 export default function ClosedIssues() {
 
+
   return (
     <>
       <View style={styles.container}>
-        <Text>Closed issues</Text>
+        <Text style={{color:'#fff'}}>Closed issues</Text>
       </View>
     </>
   );
@@ -31,10 +32,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#040c28'
   },
   contents: {
-    marginTop: 24,
     width: '100%',
     height: 400,
-    padding: 24,
     display: 'flex',
     flexDirection: 'column',
   },

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 
-import { ImageBackground, StyleSheet, Text, TextInput, View, Image, TouchableHighlight } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TextInput, View, Image, TouchableHighlight, Animated, TouchableOpacity, Platform, Button } from 'react-native';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -15,6 +15,48 @@ import OpenIssues from './open_issues';
 import ClosedIssues from './closed_issues';
 
 const Tab = createMaterialTopTabNavigator();
+
+function MyTabBar({ state, navigation }:{state:any, navigation:any}) {
+  return (
+    <>
+    <View style={{
+      flexDirection: 'row',
+      flexWrap: 'wrap',
+      alignItems: 'flex-start',
+      backgroundColor: 'rgba(255,255,255,0.1)', borderColor:'#363D53', borderTopWidth:1, borderBottomWidth:1, paddingLeft:4
+      }}>
+
+    {state.routes.map((route: { key: React.Key | null | undefined; name: {} | null | undefined; }, index: any) => {
+        return (
+          <>
+            <TouchableHighlight key={route.key}
+            underlayColor="transparent"
+            style={{
+              opacity: state.index === index ? 1 : 0.5,
+              paddingVertical: 14,
+              flexDirection: 'row',
+              flexWrap: 'wrap',
+              alignItems: 'flex-start',
+              marginLeft: 20,
+            }}
+            onPress={() => {
+              navigation.navigate(route.name);
+            }}>
+              <>
+            {route.name  == 'Closed' ? 
+            <Image style={{marginTop:2}} source={require('../../../../assets/right_tick_mark.svg')}></Image> : 
+            <Image style={{marginTop:2}} source={require('../../../../assets/open_issue.svg')}></Image>}
+            <Text key={index} style={{color:'#ffffff', fontWeight:'bold', fontSize:14, marginLeft: 8}}>{route.name}</Text>
+            </>
+            </TouchableHighlight>
+          </>
+        )
+    })}
+    </View>
+    </>
+  );
+}
+
 
 export default function Issues() {
 
@@ -34,9 +76,28 @@ export default function Issues() {
             <View style={styles.badge}><Text style={{color: 'rgba(230,231,233,0.5)'}}> 668 </Text></View>
           </View>
 
-          <Tab.Navigator style={{width: '100%'}}>
-            <Tab.Screen name="Open Issues" component={OpenIssues} />
-            <Tab.Screen name="Closed Issues" component={ClosedIssues} />
+          <Tab.Navigator style={styles.tabWrap}  screenOptions={{
+              tabBarLabelStyle: { fontSize: 14, color: '#E6E7E9', textTransform: 'capitalize' },
+              tabBarItemStyle: { width: 'auto' },
+              tabBarStyle: { 
+                // marginTop:(Platform.OS === 'ios') ? 0 : 0,
+                // height : 40,
+                backgroundColor: 'rgba(255,255,255,0.1)', borderColor:'#363D53', borderTopWidth:1, borderBottomWidth:1, paddingLeft:14 },
+                tabBarIndicatorStyle: { backgroundColor: 'transparent' },
+                tabBarShowIcon: true,
+                tabBarShowLabel: false,
+                tabBarActiveTintColor: "E6E7E9",
+                tabBarInactiveTintColor: "#ff0000",
+                tabBarIconStyle: {
+                  width: '100%',
+                  height: 20,
+                }
+              
+            }}
+            tabBar={props => <MyTabBar {...props} />}
+          >
+            <Tab.Screen name="681 Open" component={OpenIssues}/>
+            <Tab.Screen name="Closed" component={ClosedIssues} />
           </Tab.Navigator>
         </View>
           
@@ -64,10 +125,11 @@ const styles = StyleSheet.create({
   },
   logo: {
     width: '50%',
+    padding:24,
   },
   issueCountWrap: {
-    flex: 1,
-    marginTop: 34,
+    marginTop: 10,
+    padding:24,
     flexDirection: 'row',
     flexWrap: 'wrap',
     alignItems: 'flex-start'
@@ -84,9 +146,11 @@ const styles = StyleSheet.create({
     marginLeft:5,
     backgroundColor: 'rgba(230,231,233,0.5)',
   },
-  textWrap: {
+  tabWrap: {
     width: '100%',
-    marginTop: 36
+    backgroundColor: 'transparent',
+    marginTop:0,
+    paddingTop:0,
   },
   inputLabel: {
     color: '#fff',
