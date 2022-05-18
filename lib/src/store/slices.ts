@@ -1,30 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface IState {
-    openedIssues: object;
+    openIssues: object;
     closedIssues: object;
-    openedIssuesLastVisitedPage: number;
+    openIssuesLastVisitedPage: number;
     closedIssuesLastVisitedPage: number;
     issuePerPage: number;
+    owner: string;
+    reponame: string;
 }
 
 const initialState: IState = {
-    openedIssues: {},
+    openIssues: {},
     closedIssues: {},
-    openedIssuesLastVisitedPage: 1,
+    openIssuesLastVisitedPage: 1,
     closedIssuesLastVisitedPage: 1,
     issuePerPage: 10,
+    owner: "",
+    reponame: ""
 }
 
 export const slices = createSlice({
     name: "issues",
     initialState,
     reducers: {
-        setOpenedIssues: (state:IState, action: {
+        setOpenIssues: (state:IState, action: {
             payload: any;
             type: string;
         }) => {
-            state.openedIssues = action.payload;
+            state.openIssues = action.payload;
         },
         setClosedIssues: (state:IState, action: {
             payload: any;
@@ -32,13 +36,40 @@ export const slices = createSlice({
         }) => {
             state.closedIssues = action.payload;
         },
+        setOwner: (state:IState, action: {
+            payload: any;
+            type: string;
+        }) => {
+            state.owner = action.payload;
+        },
+        setReponame: (state:IState, action: {
+            payload: any;
+            type: string;
+        }) => {
+            state.reponame = action.payload;
+        },
+        incrementOpenIssuesLastVisitedPage: (state:IState) => {
+            state.openIssuesLastVisitedPage++;
+        },
+        decrementOpenIssuesLastVisitedPage: (state:IState) => {
+            state.openIssuesLastVisitedPage--;
+        },
+        incrementClosedIssuesLastVisitedPage: (state:IState) => {
+            state.closedIssuesLastVisitedPage++;
+        },
+        decrementClosedIssuesLastVisitedPage: (state:IState) => {
+            state.closedIssuesLastVisitedPage--;
+        },
         resetState: (state:IState) => {
-            state.openedIssues = {};
+            state.openIssues = {};
             state.closedIssues = {};
         }
     }
 })
 
-export const { setOpenedIssues, setClosedIssues, resetState } = slices.actions;
+export const { setOpenIssues, setClosedIssues, resetState,
+    incrementOpenIssuesLastVisitedPage, decrementOpenIssuesLastVisitedPage,
+    incrementClosedIssuesLastVisitedPage, decrementClosedIssuesLastVisitedPage,
+    setOwner, setReponame } = slices.actions;
 
 export default slices.reducer;

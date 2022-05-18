@@ -26,7 +26,7 @@ export default function CustomModal(props:Props) {
         }}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
-            <Text style={styles.modalText}>No Repository found!</Text>
+            <Text style={styles.modalText}>Sorry! cannot get data!</Text>
             <Pressable
               style={[styles.button, styles.buttonClose]}
               onPress={() => {

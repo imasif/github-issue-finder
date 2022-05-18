@@ -1,113 +1,121 @@
 import React, { useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
-import { ImageBackground, StyleSheet, Text, TextInput, View, Image, TouchableHighlight } from 'react-native';
+import { ImageBackground, StyleSheet, Text, TextInput, View, Image, TouchableHighlight, SafeAreaView, ScrollView, FlatList, TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-
 import Ionicons from '@expo/vector-icons/Ionicons';
-
-import AppLoading from 'expo-app-loading';
-
-import { Formik } from 'formik';
-import { formValidationSchema } from '../../helper/validation_schema';
-import {Shadow} from 'react-native-shadow-2';
+import { SvgComment, SvgOpenIssues, SvgOpenIssues2 } from '../../helper/svgs';
+import { useAppSelector } from '../../helper/hooks';
+import moment from 'moment';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
+import IssueWrap from '../common/issue_item_wrap';
+import { useDispatch } from 'react-redux';
+import { getRequest } from '../../helper/requests';
+import { decrementOpenIssuesLastVisitedPage, incrementOpenIssuesLastVisitedPage, setOpenIssues } from '../../store/slices';
+import CustomModal from '../../helper/modal';
 
 const Tab = createBottomTabNavigator();
 
 export default function OpenIssues() {
+  const openIssues = useAppSelector(state => state.openIssues);
+  const [issueCount, setIssueCount] = React.useState(openIssues.total_count);
+  const [totalPages, setTotalPages] = React.useState(0);
+  const [currentPages, setCurrentPages] = React.useState(0);
+  const [errorModalVisible, setErrorModalVisible] = React.useState(false);
+
+
+  const currentPage = useAppSelector(state => state.openIssuesLastVisitedPage);
+  const owner = useAppSelector(state => state.owner);
+  const reponame = useAppSelector(state => state.reponame);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    setTotalPages(Math.ceil(issueCount/10));
+
+    setCurrentPages(currentPage);
+  },[]);
+
+
+  const prevPage = ()=>{
+    if(currentPages > 1){
+      setCurrentPages(currentPages - 1);
+      dispatch(decrementOpenIssuesLastVisitedPage());
+      getRequest(`search/issues`,`repo:${owner}/${reponame}/node+type:issue+state:open&page=${currentPage-1}&per_page=10`)
+      .then((res)=>{
+        dispatch(setOpenIssues(res.data));
+        console.log(currentPage-1);
+      }).catch(err=>{
+        console.log('#######previous########',err);
+
+        setErrorModalVisible(true);
+        setCurrentPages(currentPages+1);
+        dispatch(incrementOpenIssuesLastVisitedPage());
+      });
+
+    }
+  }
+
+  const nextPage = ()=>{
+    if(currentPages < totalPages){
+      setCurrentPages(currentPages+1);
+      dispatch(incrementOpenIssuesLastVisitedPage());
+      getRequest(`search/issues`,`repo:${owner}/${reponame}/node+type:issue+state:open&page=${currentPage+1}&per_page=10`)
+      .then((res)=>{
+        dispatch(setOpenIssues(res.data));
+        console.log(currentPage+1);
+      }).catch(err=>{
+        console.log('#######next########',err);
+
+        setErrorModalVisible(true);
+        setCurrentPages(currentPages-1);
+        dispatch(decrementOpenIssuesLastVisitedPage());
+      });
+
+    }
+  }
 
   return (
     <>
-      <View style={styles.container}>
-        <Text style={{color:'#fff'}}>Open issues</Text>
-      </View>
+      <ScrollView style={styles.container}>
+
+        <CustomModal visible={errorModalVisible} onclose={()=>setErrorModalVisible(false)}/>
+
+        <IssueWrap issues={openIssues}/>
+
+        <View style={{flex:1, alignContent:'center', alignItems:'center', paddingVertical:30}}>
+          <View style={{width:180, justifyContent: 'space-between', flex:1, flexDirection: 'row',}}>
+            {currentPages > 1 ? <TouchableHighlight style={{padding:10}} onPress={()=>prevPage()} underlayColor="rgba(255,255,255,0.1)">
+              <View style={{flexDirection:'row'}}>
+                <Ionicons name="chevron-back-outline" style={{marginTop:2, fontSize: 20}}  color='#ffffff'/>
+                <Text style={{color:'#ffffff', marginTop:2}}>Previous</Text>
+              </View>
+            </TouchableHighlight> :
+             <View style={{flexDirection:'row', padding:10, opacity: 0.5}}>
+                <Ionicons name="chevron-back-outline" style={{marginTop:2, fontSize: 20}}  color='#ffffff'/>
+                <Text style={{color:'#ffffff', marginTop:2}}>Previous</Text>
+              </View>}
+              
+            {currentPages < totalPages ? <TouchableHighlight style={{padding:10}} onPress={()=>nextPage()} underlayColor="rgba(255,255,255,0.1)">
+              <View style={{flexDirection:'row'}}>
+                <Text style={{color:'#ffffff', marginTop:2}}>Next</Text>
+                <Ionicons name="chevron-forward-outline" style={{marginTop:2, fontSize: 20}}  color='#ffffff'/>
+              </View>
+            </TouchableHighlight> : 
+              <View style={{flexDirection:'row', padding:10, opacity: 0.5}}>
+                <Text style={{color:'#ffffff', marginTop:2}}>Next</Text>
+                <Ionicons name="chevron-forward-outline" style={{marginTop:2, fontSize: 20}}  color='#ffffff'/>
+              </View>
+            }
+          </View>
+        </View>
+      </ScrollView>
     </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#040c28'
+    flexGrow:0,
   },
-  contents: {
-    marginTop: 24,
-    width: '100%',
-    height: 400,
-    padding: 24,
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  logoWrap: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start'
-  },
-  logo: {
-    width: '50%',
-  },
-  issueCountWrap: {
-    flex: 1,
-    marginTop: 34,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'flex-start'
-  },
-  heading: {
-    fontSize: 20,
-    color: '#fff',
-  },
-  badge: {
-    fontSize: 14,
-    borderRadius: 20,
-    padding: 2,
-    marginTop: 3,
-    marginLeft:5,
-    backgroundColor: 'rgba(230,231,233,0.5)',
-  },
-  textWrap: {
-    width: '100%',
-    marginTop: 36
-  },
-  inputLabel: {
-    color: '#fff',
-    marginBottom: 12,
-  },
-  textInputWrap: {
-    minWidth: '100%',
-    borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.12)',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'space-between'
-  },
-  input: {
-    lineHeight: 20,
-    minWidth: '100%',
-    width: '100%',
-    paddingTop: 18,
-    paddingRight: 24,
-    paddingBottom: 18,
-    paddingLeft: 24,
-    borderRadius: 12,
-    color: '#fff'
-  },
-  buttonWrap: {
-    marginTop: 47,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-  },
-  button: {
-    backgroundColor: '#9A41EA', 
-    borderRadius: 8
-  },
-  buttonText: {
-    fontSize: 14,
-    alignSelf: 'center',
-    paddingHorizontal: 42,
-    paddingVertical: 15,
-    color: '#fff',
-    fontWeight: 'bold'
-  }
+
 });

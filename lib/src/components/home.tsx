@@ -5,7 +5,7 @@ import { ImageBackground, StyleSheet, Text, TextInput, View, Image, TouchableHig
 import Ionicons from '@expo/vector-icons/Ionicons';
 import AppLoading from 'expo-app-loading';
 import { useSelector, useDispatch } from 'react-redux';
-import { setOpenedIssues, setClosedIssues, resetState } from '../store/slices';
+import { setClosedIssues, resetState, setOpenIssues, setOwner, setReponame } from '../store/slices';
 
 import { Formik } from 'formik';
 import { formValidationSchema } from '../helper/validation_schema';
@@ -20,7 +20,7 @@ interface formdata {
 }
 
 
-export default function Home() {
+export default function Home({navigation}) {
   const [inputborderColor, setInputBorderColors] = React.useState<Array<string>>(["transparent", "transparent"]);
   const [inputShadowColor, setInputShadowColors] = React.useState<Array<string>>(["transparent", "transparent"]);
 
@@ -36,16 +36,22 @@ export default function Home() {
     reponame: ""
   });
 
-  const openedIssues = useAppSelector(state => state.openedIssues);
+  const openIssues = useAppSelector(state => state.openIssues);
   const closedIssues = useAppSelector(state => state.closedIssues);
 
   const dispatch = useDispatch();
 
   const formSubmit = (values:formdata) => {
-    getRequest(`search/issues`,`repo:${values.owner}/${values.reponame}/node+type:issue+state:closed`).then(res=>{
-      dispatch(setClosedIssues(res.data));
-      console.log(res.data['total_count']);
-    }).catch(err=> {
+    Promise.all([
+    getRequest(`search/issues`,`repo:${values.owner}/${values.reponame}/node+type:issue+state:open&page=1&per_page=10`),
+    getRequest(`search/issues`,`repo:${values.owner}/${values.reponame}/node+type:issue+state:closed&page=1&per_page=10`),
+    ]).then(([open, closed]) => {
+      dispatch(setOwner(values.owner));
+      dispatch(setReponame(values.reponame));
+      dispatch(setOpenIssues(open.data));
+      dispatch(setClosedIssues(closed.data));
+      navigation.navigate('Issues');
+    }).catch(err => {
       console.log('##############',err);
       setErrorModalVisible(true);
     });
@@ -78,7 +84,6 @@ export default function Home() {
 
           <View style={styles.inputWrap}>
             <CustomModal visible={errorModalVisible} onclose={()=>setErrorModalVisible(false)}/>
-            <Text style={{color:'#FFF'}}>{closedIssues.total_count}</Text>
 
             <Formik
               validationSchema={formValidationSchema}
