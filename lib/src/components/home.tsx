@@ -40,11 +40,11 @@ export default function Home({navigation}:{navigation:any}) {
 
   const formSubmit = (values:formdata) => {
     Promise.all([
-    getRequest(`search/issues`,`repo:${values.owner}/${values.reponame}/node+type:issue+state:open&page=1&per_page=10`),
-    getRequest(`search/issues`,`repo:${values.owner}/${values.reponame}/node+type:issue+state:closed&page=1&per_page=10`),
+    getRequest(`search/issues`,`repo:${values.owner.toLowerCase().trim()}/${values.reponame.toLowerCase().trim()}/node+type:issue+state:open&page=1&per_page=10`),
+    getRequest(`search/issues`,`repo:${values.owner.toLowerCase().trim()}/${values.reponame.toLowerCase().trim()}/node+type:issue+state:closed&page=1&per_page=10`),
     ]).then(([open, closed]) => {
-      dispatch(setOwner(values.owner));
-      dispatch(setReponame(values.reponame));
+      dispatch(setOwner(values.owner.toLowerCase().trim()));
+      dispatch(setReponame(values.reponame.toLowerCase().trim()));
       dispatch(setOpenIssues(open.data));
       dispatch(setClosedIssues(closed.data));
       navigation.navigate('Issues');
