@@ -7,7 +7,7 @@ export interface Props {
 }
 
 export default function CustomModal(props:Props) {
-  const [modalVisible, setModalVisible] = useState(false);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   useEffect(() => {
     setModalVisible(props.visible);

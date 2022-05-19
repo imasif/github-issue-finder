@@ -6,18 +6,19 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { SvgComment, SvgOpenIssues, SvgOpenIssues2 } from '../../helper/svgs';
 import moment from 'moment';
+import { IssueInterface, ItemInterface } from '../../store/slices';
 
-export default function IssueWrap(props) {
-    const { items } = props.issues;
-    const [pressedIndex, setPressedIndex] = React.useState(null);
+export default function IssueWrap({issues, closedIssues}: {issues: IssueInterface, closedIssues?:boolean}) {
+    const { items } = issues;
+    const [pressedIndex, setPressedIndex] = React.useState<null|number>(null);
     return(
       <>
-      {items.map((item, index) => {
+      {items.map((item:ItemInterface, index:number) => {
         return (
             <TouchableHighlight key={'open_touch_'+index} style={styles.listItem} onPressIn={()=>{setPressedIndex(index)}}
             onPressOut={()=>{setPressedIndex(index)}} underlayColor="rgba(255,255,255,0.1)">
               <>
-              {props.closedIssues ? <Ionicons name='checkmark-circle-outline' style={{marginTop:2, fontSize: 20}}  color='#9A41EA'/> : <SvgOpenIssues2 style={{marginTop: 2, }}/>}
+              {closedIssues ? <Ionicons name='checkmark-circle-outline' style={{marginTop:2, fontSize: 20}}  color='#9A41EA'/> : <SvgOpenIssues2 style={{marginTop: 2, }}/>}
               <View style={styles.listItemText}>
                 <Text style={[styles.heading, {color: pressedIndex == index ? '#3267F0': '#ffffff'}]}>{item.number+' '+item.title.trim()}</Text>
                 <Text style={styles.subheading}>{moment(item.created_at).fromNow()}</Text>

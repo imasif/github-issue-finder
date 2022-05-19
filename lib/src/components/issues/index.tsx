@@ -2,7 +2,7 @@ import React from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 import { ImageBackground, StyleSheet, Text, TextInput, View, Image, TouchableHighlight, Animated, TouchableOpacity, Platform, Button } from 'react-native';
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import { createMaterialTopTabNavigator, MaterialTopTabBarProps } from '@react-navigation/material-top-tabs';
 import OpenIssues from './open_issues';
 import ClosedIssues from './closed_issues';
 import {SvgRightTick, SvgOpenIssues} from '../../helper/svgs';
@@ -10,7 +10,8 @@ import { useAppSelector } from '../../helper/hooks';
 
 const Tab = createMaterialTopTabNavigator();
 
-function CustomTabBar({ state, navigation }:{state:any, navigation:any}) {
+function CustomTabBar(props: MaterialTopTabBarProps) {
+  const {state, navigation } = props;
 
   return (
     <>
@@ -21,7 +22,7 @@ function CustomTabBar({ state, navigation }:{state:any, navigation:any}) {
       backgroundColor: 'rgba(255,255,255,0.1)', borderColor:'#363D53', borderTopWidth:1, borderBottomWidth:1, paddingLeft:4
       }}>
 
-    {state.routes.map((route: { key: React.Key | null | undefined; name: {} | null | undefined; }, index: any) => {
+    {state.routes.map((route, index) => {
         return (
           <TouchableHighlight key={'touch'+index}
           underlayColor="transparent"

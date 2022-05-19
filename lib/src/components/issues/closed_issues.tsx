@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Dispatch, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
 
 import { ImageBackground, StyleSheet, Text, TextInput, View, Image, TouchableHighlight, ScrollView } from 'react-native';
@@ -16,24 +16,25 @@ import { useAppSelector } from '../../helper/hooks';
 import moment from 'moment';
 import IssueWrap from '../common/issue_item_wrap';
 import { useDispatch } from 'react-redux';
-import { decrementClosedIssuesLastVisitedPage, decrementOpenIssuesLastVisitedPage, incrementClosedIssuesLastVisitedPage, incrementOpenIssuesLastVisitedPage, setClosedIssues, setOpenIssues } from '../../store/slices';
+import { decrementClosedIssuesLastVisitedPage, decrementOpenIssuesLastVisitedPage, incrementClosedIssuesLastVisitedPage, incrementOpenIssuesLastVisitedPage, IssueInterface, setClosedIssues, setOpenIssues } from '../../store/slices';
 import { getRequest } from '../../helper/requests';
 import CustomModal from '../../helper/modal';
+import { AnyAction } from '@reduxjs/toolkit';
 
 const Tab = createBottomTabNavigator();
 
 export default function ClosedIssues() {
-  const closedIssues = useAppSelector(state => state.closedIssues);``
-  const [issueCount, setIssueCount] = React.useState(closedIssues.total_count);
-  const [totalPages, setTotalPages] = React.useState(0);
-  const [currentPages, setCurrentPages] = React.useState(0);
-  const [errorModalVisible, setErrorModalVisible] = React.useState(false);
+  const closedIssues: IssueInterface = useAppSelector(state => state.closedIssues);``
+  const [issueCount, setIssueCount] = React.useState<number>(closedIssues.total_count);
+  const [totalPages, setTotalPages] = React.useState<number>(0);
+  const [currentPages, setCurrentPages] = React.useState<number>(0);
+  const [errorModalVisible, setErrorModalVisible] = React.useState<boolean>(false);
 
 
-  const currentPage = useAppSelector(state => state.closedIssuesLastVisitedPage);
-  const owner = useAppSelector(state => state.owner);
-  const reponame = useAppSelector(state => state.reponame);
-  const dispatch = useDispatch();
+  const currentPage: number = useAppSelector(state => state.closedIssuesLastVisitedPage);
+  const owner: string = useAppSelector(state => state.owner);
+  const reponame: string = useAppSelector(state => state.reponame);
+  const dispatch: Dispatch<AnyAction> = useDispatch();
 
   useEffect(() => {
     setTotalPages(Math.ceil(issueCount/10));

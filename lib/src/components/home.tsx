@@ -20,7 +20,7 @@ interface formdata {
 }
 
 
-export default function Home({navigation}) {
+export default function Home({navigation}:{navigation:any}) {
   const [inputborderColor, setInputBorderColors] = React.useState<Array<string>>(["transparent", "transparent"]);
   const [inputShadowColor, setInputShadowColors] = React.useState<Array<string>>(["transparent", "transparent"]);
 
@@ -35,9 +35,6 @@ export default function Home({navigation}) {
     owner: "",
     reponame: ""
   });
-
-  const openIssues = useAppSelector(state => state.openIssues);
-  const closedIssues = useAppSelector(state => state.closedIssues);
 
   const dispatch = useDispatch();
 
@@ -70,7 +67,7 @@ export default function Home({navigation}) {
               left: 0
             }}
             imageStyle={{
-              resizeMode: 'cover' // works only here!
+              resizeMode: 'cover'
             }}
         >
         </ImageBackground>

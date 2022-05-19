@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Svg, { Circle, Path } from 'react-native-svg';
 
-export function SvgRightTick(props:any) {
+export function SvgRightTick(props:any): JSX.Element {
   return (
     <Svg
       width={18}
@@ -20,7 +20,7 @@ export function SvgRightTick(props:any) {
   );
 }
 
-export function SvgOpenIssues(props:any) {
+export function SvgOpenIssues(props:any): JSX.Element {
   return (
     <Svg
       width={18}
@@ -36,7 +36,7 @@ export function SvgOpenIssues(props:any) {
   )
 }
 
-export function SvgOpenIssues2(props:any) {
+export function SvgOpenIssues2(props:any): JSX.Element {
   return (
     <Svg
       width={18}
@@ -52,7 +52,7 @@ export function SvgOpenIssues2(props:any) {
   )
 }
 
-export function SvgComment(props:any) {
+export function SvgComment(props:any): JSX.Element {
   return (
     <Svg
       width={20}
