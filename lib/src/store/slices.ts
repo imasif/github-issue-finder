@@ -140,8 +140,16 @@ export const slices = createSlice({
             state.closedIssuesLastVisitedPage--;
         },
         resetState: (state:IState) => {
-            state.openIssues = {};
-            state.closedIssues = {};
+            state.openIssues = {
+                total_count: 0,
+                incomplete_results: false,
+                items: [],
+            };
+            state.closedIssues = {
+                total_count: 0,
+                incomplete_results: false,
+                items: [],
+            };
         }
     }
 })
